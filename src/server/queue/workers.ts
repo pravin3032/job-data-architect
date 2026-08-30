@@ -7,7 +7,8 @@ import { loadCandidateProfile } from '@/lib/candidate';
 import { scoreJob } from '@/lib/scoring';
 import { logger } from '@/lib/logger';
 
-const connection = { url: process.env.REDIS_URL ?? 'redis://localhost:6379' };
+import { redisConnection } from '@/lib/redis';
+const connection = redisConnection();
 const worker = new Worker('job-automation', async task => {
   if (task.name === 'ingest') return ingestSource(task.data.source as SourceKind, task.data.slug);
   if (task.name === 'verify') return verifyJob(task.data.jobId as string);
