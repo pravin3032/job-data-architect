@@ -1,0 +1,13 @@
+node_modules
+.next
+coverage
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+config/candidate.local.json
+config/answers.local.json
+private/
+playwright-report/
+test-results/

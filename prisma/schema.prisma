@@ -1,0 +1,148 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model SourceConfig {
+  id          String   @id @default(cuid())
+  kind        SourceKind
+  name        String
+  slug        String
+  enabled     Boolean  @default(true)
+  settings    Json?
+  lastRunAt   DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  jobs        Job[]
+
+  @@unique([kind, slug])
+}
+
+model Job {
+  id             String      @id @default(cuid())
+  sourceConfigId String?
+  sourceConfig   SourceConfig? @relation(fields: [sourceConfigId], references: [id], onDelete: SetNull)
+  source         SourceKind
+  externalId     String
+  title          String
+  company        String
+  location       String?
+  workplaceType  WorkplaceType?
+  employmentType String?
+  salaryMin      Int?
+  salaryMax      Int?
+  salaryCurrency String?     @default("USD")
+  url            String
+  description    String      @db.Text
+  postedAt       DateTime?
+  expiresAt      DateTime?
+  verifiedAt     DateTime?
+  status         JobStatus   @default(FOUND)
+  score          Int?
+  matchClass     MatchClass?
+  scoreProof     Json?
+  fingerprint    String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  applications   Application[]
+  tailoredResumes TailoredResume[]
+
+  @@unique([source, externalId])
+  @@index([status, score])
+  @@index([company, title])
+  @@index([fingerprint])
+}
+
+model ResumeVersion {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  focus       String
+  storageRef  String?
+  contentHash String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  applications Application[]
+  tailored    TailoredResume[]
+}
+
+model TailoredResume {
+  id            String   @id @default(cuid())
+  jobId         String
+  job           Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  resumeVersionId String
+  resumeVersion ResumeVersion @relation(fields: [resumeVersionId], references: [id])
+  headline      String
+  summary       String   @db.Text
+  selectedClaims Json
+  keywordCoverage Json
+  content       String   @db.Text
+  approvedAt    DateTime?
+  createdAt     DateTime @default(now())
+  applications Application[]
+
+  @@index([jobId])
+}
+
+model Application {
+  id               String      @id @default(cuid())
+  jobId            String
+  job               Job         @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  resumeVersionId  String?
+  resumeVersion    ResumeVersion? @relation(fields: [resumeVersionId], references: [id])
+  tailoredResumeId String?
+  tailoredResume   TailoredResume? @relation(fields: [tailoredResumeId], references: [id])
+  status           AppStatus   @default(PLANNED)
+  submissionMode   SubmissionMode @default(REVIEW)
+  externalRef      String?
+  appliedAt        DateTime?
+  followupAt       DateTime?
+  notes            String?     @db.Text
+  answersSnapshot  Json?
+  blockers         Json?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  followups        Followup[]
+
+  @@index([status, followupAt])
+  @@unique([jobId])
+}
+
+model Followup {
+  id            String   @id @default(cuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  dueAt         DateTime
+  channel       String   @default("EMAIL")
+  status        FollowupStatus @default(PENDING)
+  template      String?  @db.Text
+  completedAt   DateTime?
+  createdAt     DateTime @default(now())
+
+  @@index([status, dueAt])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  action     String
+  entityType String
+  entityId   String?
+  actor      String   @default("SYSTEM")
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([createdAt])
+}
+
+enum SourceKind { GREENHOUSE LEVER ASHBY COMPANY_SITE MANUAL }
+enum WorkplaceType { REMOTE HYBRID ONSITE }
+enum JobStatus { FOUND VERIFIED QUALIFIED REVIEWING APPLIED FOLLOWUP INTERVIEW OFFER REJECTED EXPIRED CLOSED }
+enum MatchClass { A B C D }
+enum AppStatus { PLANNED PREPARED NEEDS_REVIEW NEEDS_HUMAN SUBMITTED FOLLOWUP INTERVIEW OFFER REJECTED WITHDRAWN }
+enum SubmissionMode { REVIEW ASSISTED AUTOMATIC }
+enum FollowupStatus { PENDING SENT COMPLETED CANCELLED }

@@ -1,0 +1,2 @@
+import {describe,expect,it} from 'vitest';import {detectHumanBlockers} from '@/lib/applicationAnswers';
+describe('human checkpoints',()=>{it('detects CAPTCHA and legal attestations',()=>{expect(detectHumanBlockers("I'm not a robot. I certify this is true.")).toEqual(expect.arrayContaining(['CAPTCHA','LEGAL_ATTESTATION']))});it('allows routine fields',()=>{expect(detectHumanBlockers('First name Email Phone')).toEqual([])})});
