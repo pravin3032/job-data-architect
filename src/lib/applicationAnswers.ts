@@ -10,7 +10,7 @@ const answersSchema = z.object({
 export type ApplicationAnswers = z.infer<typeof answersSchema>;
 
 export async function loadApplicationAnswers(path = process.env.APPLICATION_ANSWERS_PATH ?? 'config/answers.local.json') {
-  try { return answersSchema.parse(JSON.parse(await readFile(resolve(process.cwd(), path), 'utf8'))); }
+  try { return answersSchema.parse(JSON.parse(await readFile(resolve(/* turbopackIgnore: true */ process.cwd(), path), 'utf8'))); }
   catch { return answersSchema.parse(JSON.parse(await readFile(resolve(process.cwd(), 'config/answers.example.json'), 'utf8'))); }
 }
 

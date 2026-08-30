@@ -18,7 +18,7 @@ export type CandidateProfile = z.infer<typeof candidateSchema>;
 export async function loadCandidateProfile(path = process.env.CANDIDATE_PROFILE_PATH ?? 'config/candidate.local.json') {
   const fallback = 'config/candidate.example.json';
   let raw: string;
-  try { raw = await readFile(resolve(process.cwd(), path), 'utf8'); }
+  try { raw = await readFile(resolve(/* turbopackIgnore: true */ process.cwd(), path), 'utf8'); }
   catch { raw = await readFile(resolve(process.cwd(), fallback), 'utf8'); }
   return candidateSchema.parse(JSON.parse(raw));
 }
