@@ -1,0 +1,44 @@
+{
+  "name": "job-search-automation",
+  "version": "1.0.0",
+  "private": true,
+  "engines": { "node": ">=20.11" },
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:seed": "tsx prisma/seed.ts",
+    "worker": "tsx src/server/queue/workers.ts",
+    "schedule": "tsx scripts/schedule.ts",
+    "apply:assist": "tsx scripts/apply-assist.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "5.22.0",
+    "bullmq": "5.81.4",
+    "next": "16.3.3",
+    "playwright": "1.62.1",
+    "pino": "9.6.0",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "zod": "3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.5",
+    "@types/react": "19.0.3",
+    "@types/react-dom": "19.0.2",
+    "eslint": "9.39.1",
+    "eslint-config-next": "16.3.3",
+    "prisma": "5.22.0",
+    "tsx": "4.21.0",
+    "typescript": "5.7.2",
+    "vitest": "4.1.11"
+  },
+  "prisma": { "seed": "tsx prisma/seed.ts" }
+}

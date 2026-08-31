@@ -1,0 +1,6 @@
+import { z } from 'zod';
+import { prisma } from '@/lib/db';
+import { loadCandidateProfile } from '@/lib/candidate';
+import { tailorResume, selectResumeFocus } from '@/lib/resumeTailor';
+const schema=z.object({jobId:z.string(),resumeVersionId:z.string().optional()});
+export async function POST(request:Request){try{const input=schema.parse(await request.json());const job=await prisma.job.findUniqueOrThrow({where:{id:input.jobId}});const profile=await loadCandidateProfile();const result=tailorResume(job,profile);let versionId=input.resumeVersionId;if(!versionId){const focus=selectResumeFocus(`${job.title} ${job.description}`);const version=await prisma.resumeVersion.upsert({where:{name:`Base - ${focus}`},update:{active:true},create:{name:`Base - ${focus}`,focus}});versionId=version.id;}const tailored=await prisma.tailoredResume.create({data:{jobId:job.id,resumeVersionId:versionId,headline:result.headline,summary:result.summary,selectedClaims:result.selectedClaims,keywordCoverage:{matched:result.matchedKeywords,missing:result.missingKeywords},content:result.content}});return Response.json({...tailored,integrityWarnings:result.integrityWarnings},{status:201});}catch(error){return Response.json({error:error instanceof Error?error.message:'Invalid request'},{status:400});}}

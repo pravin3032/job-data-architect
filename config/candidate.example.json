@@ -1,0 +1,17 @@
+{
+  "headline": "Lead Snowflake Data Architect",
+  "yearsExperience": 18,
+  "targetTitles": ["Lead Data Architect", "Snowflake Architect", "Principal Data Architect", "Lead Data Engineer"],
+  "targetLocations": ["Remote", "United States"],
+  "minimumBaseSalary": 180000,
+  "skills": ["Snowflake", "dbt", "Airflow", "AWS", "Databricks", "SQL", "Python", "Snowpark", "Fivetran", "Data Vault 2.0", "dimensional modeling", "RBAC", "data governance", "CI/CD"],
+  "certifications": ["SnowPro Core", "Databricks Data Engineer Professional", "Oracle SQL Expert"],
+  "claims": [
+    {"id":"c1","text":"18+ years in data architecture and engineering","tags":["architecture","leadership"]},
+    {"id":"c2","text":"Designed Snowflake and Databricks financial data platforms on AWS","tags":["snowflake","databricks","aws","financial services"]},
+    {"id":"c3","text":"Built dbt models, snapshots, and automated data-quality tests","tags":["dbt","testing","elt"]},
+    {"id":"c4","text":"Implemented RBAC, masking, auditing, and governance for sensitive data","tags":["security","governance","snowflake"]},
+    {"id":"c5","text":"Delivered multi-petabyte platforms and 40%+ compute/storage optimization","tags":["scale","cost optimization","performance"]},
+    {"id":"c6","text":"Built ingestion with Snowpipe, S3, COPY, Fivetran, and Airflow","tags":["snowpipe","s3","fivetran","airflow","ingestion"]}
+  ]
+}
