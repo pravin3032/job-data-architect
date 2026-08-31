@@ -1,0 +1,27 @@
+{
+  "name": "CareerOS",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "workspace",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "shutdownAction": "stopCompose",
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "CareerOS Dashboard",
+      "onAutoForward": "openPreview",
+      "visibility": "private"
+    }
+  },
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "postStartCommand": "bash .devcontainer/start.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Prisma.prisma",
+        "dbaeumer.vscode-eslint",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  },
+  "remoteUser": "node"
+}
