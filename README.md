@@ -76,3 +76,7 @@ See [Architecture](docs/ARCHITECTURE.md), [Runbook](docs/RUNBOOK.md), [candidate
 ## Current boundary
 
 Automatic final submission is intentionally disabled by default. Production auto-submit should only be enabled per ATS adapter after field-mapping tests, legal review, and an observed review period. CAPTCHA/MFA/attestations always remain human actions.
+
+## GitHub Codespaces quick start
+
+Choose **Code → Codespaces → Create codespace on main**. PostgreSQL, Redis, dependencies, migrations, seed data, the worker, and the dashboard are initialized automatically. See [Codespaces instructions](docs/CODESPACES.md).
